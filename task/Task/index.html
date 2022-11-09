@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Template | Taha Lallali</title>
+
+  <link href="css\style.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    
+    <div class="header"> </div>
+    <div class="main"> 
+        <table>
+            <tr>
+              <th>API name</th>
+              <th>API Description</th>
+              <th>submit button</th>
+            </tr>
+
+            <tr>
+              <td> <strong> Country Info: </strong> </td>             
+              <!-- enter country code to pull information -->
+              <td> enter country code <input name="countryInfo" id="selCountry"> </td>
+              <td><button id="cInfo">submit</button></td>
+            </tr>
+
+
+            <tr>
+              <td> <strong>Country Code:</strong> </td>
+
+              <td> longditude and latitude <br> <input type="number" name="longditude" id="selLng">
+                    <input type="number" id="selLat"> 
+              </td>
+              <td><button id="cCode">submit</button></td>
+            </tr>
+
+            <tr>
+              <td><strong>Ocean:</strong>  </td>
+              <td> long and lat <br> <input type="number" name="longditude" id="selLang">
+              <input type="number"id="selLati"> </td>
+              <td><button id="btnRun">submit</button></td>
+            </tr>
+
+
+            <tr>
+              <td> <strong>Neighbourhood:</strong>  </td>
+              <td> long and lat <br> <input type="number" id="selLongditude">
+                <input type="number" id="selLatitude"> </td>
+              <td><button id="neighbourhood">submit</button></td>
+            </tr>
+
+
+          </table>
+    </div>
+    <div id="preloader"> </div>
+  
+
+
+  <h2> Country Info </h2>
+
+  <table>
+
+    <tr>
+      <td align="right">
+        Continent: 
+      </td>
+      <td id="txtContinent"> </td>
+    </tr>
+
+    <tr>
+      <td align="right">
+        Capital: 
+      </td>
+      <td id="txtCapital"> </td>
+    </tr>
+
+    <tr>
+      <td align="right">
+        Languages: 
+      </td>
+      <td id="txtLanguages"> </td>
+    </tr>
+
+    <tr>
+      <td align="right">
+        Population: 
+      </td>
+      <td id="txtPopulation"></td>
+    </tr>
+
+    <tr>
+      <td align="right">
+        Area (km<sup>2</sup>): 
+      </td>
+      <td id="txtArea"> </td>
+    </tr>
+
+  </table>
+
+    <br>
+  <h2> Country Code API </h2>
+  <table>
+
+    <tr>
+      <td align="right">
+        Language: 
+      </td>
+      <td id="txtLang"> </td>
+
+    </tr>
+
+    <tr>
+      <td align="right">
+        Distance: 
+      </td>
+      <td id="txtDist"> </td>
+
+    </tr>
+
+    <tr>
+      <td align="right">
+        Country Code: 
+      </td>
+      <td id="txtcountryCode"> </td>
+
+    </tr>
+
+    <tr>
+      <td align="right">
+        Country Name: 
+      </td>
+      <td id="txtcountryName"> </td>
+    </tr>
+
+  </table> 
+
+    <br>
+
+  <h2> Ocean API </h2>
+
+  <table>
+    <tr>
+      <td align="left">  Name:  </td>
+      <td id="txtName"> </td>
+    </tr>
+
+    <tr>
+      <td align="right">  Geo Name ID:  </td>
+      <td id="txtGeonameID"> </td>
+    </tr>
+
+    <tr>
+      <td align="left"> Distance:  </td>
+      <td id="txtDistance"> </td>
+    </tr>
+  </table>
+
+    <br>
+  <h2> TimeZone </h2>
+  <table>
+    <tr>
+      <td align="right"> city: </td>
+      <td id="time"> </td>
+    </tr>
+
+    <tr>
+      <td align="right">  country:  </td>
+      <td id="country"> </td>
+    </tr>
+
+    <tr>
+      <td align="right">  code:  </td>
+      <td id="code"> </td>
+    </tr>
+  </table>
+
+  <script src="javascript\bootstrap.min.js"></script>
+  <script src="javascript\javaScript.js"></script> 
+  <script src="javascript\jquery.min.js"></script>
+
+</body>
+</html>
