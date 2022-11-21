@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Country Profiler With a Map" />
+  <meta name="keywords" content="HTML, CSS, Bootstrap, JavaScript, Leaflet, AJAX, JSON, PHP" />
+  <meta name="author" content="Shashi" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Gazetteer</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="css/font-awesome-all.css" />
+  <link rel="stylesheet" href="css/font-awesome.min.css" />
+  <!-- Select2 -->
+  <link href="css/select.min.css" rel="stylesheet" />
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" href="css/leaflet.extra-markers.min.css" />
+  <!-- Favicon  -->
+  <link rel="shortcut icon" href="myIcon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <!-- <link rel="manifest" href="/site.webmanifest.json" /> -->
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  
+</head>
+
+<body>
+  <!-- Single Page Map Layout With a Pop up Modal Overlay -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12" id="map_parent">
+        
+        <div id="map_sibling_top"  >
+          <select id="country_list"  >
+            <option value="">Select Country</option>
+          </select>
+          <div id="btns">
+          <button  type="button" id="wikiBtn"  class="btn btn-warning">
+            <h6>Wikipedia</h6>
+           </button>
+           <button  type="button" id="weatherBtn" class="btn btn-success">
+            <h6>Weather</h6>
+           </button>
+           <button  type="button" id="citiesBtn" class="btn btn-error" style="background-color: blue;">
+            <h6>Cities</h6>
+            </button>
+            <button  type="button" id="quakesBtn" class="btn btn-error" style="background-color: red;">
+              <h6>Earthquakes</h6>
+              </button>
+          </div>
+          
+          
+          
+        </div>
+        <div class="countryInfo" id="country_info">
+          <div class="card m-10">
+            <div class="card-header">
+              <i class="fas fa-arrow-left" style="margin-right: 16px" id="left_arrow" ></i>
+              <h2 style="display: inline" id="country_name"></h2>
+            </div>
+            <div class="card-body pb-10" style="overflow-y: auto">
+              <table class="table table-bordered">
+                <tr>
+                  <th>Region</th>
+                  <td name="country_name" id="countryRegion"></td>
+                </tr>
+                <tr>
+                  <th>Sub region</th>
+                  <td id="countrySubRegion"></td>
+                </tr>
+                <tr>
+                  <th>Country</th>
+                  <td name="country_name" id="countryName"></td>
+                </tr>
+                <tr>
+                  <th>Capital</th>
+                  <td id="countryCapital"></td>
+                </tr>
+                <tr>
+                  <th>Population</th>
+                  <td id="country_population"></td>
+                </tr>
+                <tr>
+                  <th>Flag</th>
+                  <td>
+                    <img src="" style="height: 50px" id="country_flag" />
+                  </td>
+                </tr>
+                <tr>
+                  <th>Currency</th>
+                  <td id="countryCurrency" name="countryCurrency"></td>
+                </tr>
+               
+              </table>
+              <div class="text-center">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="countryInfo" id="currency_info">
+          <div class="card m-10">
+            <div class="card-header">
+              <i class="fas fa-arrow-left" style="margin-right: 16px" id="left_arrow_currency" ></i>
+              <h2 style="display: inline" id="country_name"></h2>
+            </div>
+            <div class="card-body pb-10" style="overflow-y: auto">
+              <table class="table table-bordered">
+                <tr>
+                  <th>Base currency</th>
+                  <td name="baseCurrency" id="baseCurrency">USD</td>
+                </tr>
+                <tr>
+                  <th>Exchange to country currency</th>
+                  <td id="exchangeCurrency" name="exchangeCurrency"></td>
+                </tr>
+               
+              </table>
+              <div class="text-center">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="WikiInfo" id="wiki_info">
+          <div class="card m-10">
+            <div class="card-header">
+              <i class="fas fa-arrow-left" style="margin-right: 16px" id="left_arrow_wiki" ></i>
+              <h2 style="display: inline" id="country_name"></h2>
+            </div>
+            <div class="card-body pb-10" style="overflow-y: auto">
+              <table class="table table-bordered">
+                <tr>
+                  <th>wikipedia summary</th>
+                  
+                </tr>
+                <tr>
+                  
+                  <td id="wikiSummary" name="wikiSummary"></td>
+                </tr>
+               
+              </table>
+             
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary pull_country_info_popup" id="right_arrow" >
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="btn btn-primary pull_currency_info_popup" id="right_arrow_currency" >
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="btn btn-primary pull_wiki_info_popup" id="right_arrow_wiki" >
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <div id="map"></div>
+      </div>
+      
+     
+  </div>
+  <script src="js/leaflet.js"></script>
+  <script src="js/spin.min.js"></script>
+  <script src="js/leaflet.spin.min.js"></script>
+  <script src="js/jquery-min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/select.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/leaflet.extra-markers.min.js"></script>
+  <script src="js/xml2json.js"></script>
+  <script src="js/xml2json.min.js"></script>
+
+  <script src="js/custom_script.js"></script>
+</body>
+
+</html>
