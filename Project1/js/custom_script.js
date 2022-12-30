@@ -49,7 +49,7 @@ $(document).ready(function () {
   wikipedia_fg = new L.MarkerClusterGroup();
   
   quakes_fg = new L.MarkerClusterGroup();
-  
+
   get_country_codes();
   get_user_location();
 
@@ -89,8 +89,6 @@ function get_user_location() {
         const {
           longitude
         } = position.coords;
-        cntrLat = latitude;
-        cntrLng = longitude;
         // const coords = [latitude, longitude];
         map.spin(true);
         $.ajax({
@@ -102,8 +100,7 @@ function get_user_location() {
             lng: longitude,
           },
           success: function (json) {
-            map.spin(false);
-            json = JSON.parse(json); // Parse the string data to JavaScript object
+            map.spin(false); // Parse the string data to JavaScript object
             const country_code = json?.countryCode;
             $("#country_list").val(country_code).trigger("change");
             
@@ -132,7 +129,6 @@ function get_country_border(country_code) {
       country_boundary.addData(json).setStyle(polystyle());
       const bounds = country_boundary.getBounds();
       map.fitBounds(bounds);
-      changes++;
       cities_fg.clearLayers();
       weather_fg.clearLayers();
       quakes_fg.clearLayers();
@@ -147,8 +143,7 @@ function get_country_border(country_code) {
       get_earthquakes(east, west, north, south);
       get_wikipedia();
       //get_weather(cntrLat,cntrLng);
-      get_ocean(cntrLat,cntrLng);
-      get_timezone(cntrLat,cntrLng);
+      
       get_news();
       get_covid();
       const settings = {
@@ -190,7 +185,7 @@ function get_nearby_cities(east, west, north, south) {
     success: function (json) {
       json = JSON.parse(json);
      
-      const data = json.geonames;
+      const data = json?.geonames;
     
       const city_icon = L.ExtraMarkers.icon({
         icon: "fa-building",
@@ -228,7 +223,7 @@ function get_nearby_weather(east, west, north, south) {
     success: function (json) {
       json = JSON.parse(json);
     
-      const data = json.weatherObservations;
+      const data = json?.weatherObservations;
    
       
       const city_icon = L.ExtraMarkers.icon({
@@ -267,8 +262,6 @@ function get_wikipedia() {
       summary = json["geonames"]["entry"][0]["summary"];
     
       $('#wikiSummary').html(summary);
-      cntrLng =  json["geonames"]["entry"][0]["lng"];
-      cntrLat =  json["geonames"]["entry"][0]["lat"];
       
       
     },
@@ -285,6 +278,7 @@ function get_ocean(latitude,longitude) {
       lng: longitude,  
     },
     success: function (json) {
+      console.log("ocean",json);
       json = JSON.parse(json);
       
       $('#Ocean').html(json.ocean?.name);
@@ -302,18 +296,18 @@ function get_weather(capital) {
     success: function (json) {
       json = JSON.parse(json);
      
-      $("#temp").html(Math.round(json.main.temp_max));
-      $("#wind_speed").html("Wind Speed: " + json.wind.speed + " kmh");
-      $("#icon").html('<img src="../img/'+json.weather[0].icon+'.png" height="70px">');
-      $("#weather_type").html(json.weather[0].description);
+      $("#temp").html(Math.round(json?.main?.temp_max));
+      $("#wind_speed").html("Wind Speed: " + json?.wind?.speed + " kmh");
+      $("#icon").html('<img src="../img/'+json?.weather[0]?.icon+'.png" height="70px">');
+      $("#weather_type").html(json?.weather[0]?.description);
       $("#unit2").on("click", function(){
-        $("#temp").html(Math.round((json.main.temp_max* 9/5)+32)).addClass("animated fadeIn");
+        $("#temp").html(Math.round((json.main?.temp_max* 9/5)+32)).addClass("animated fadeIn");
         $("#c_icon").css({ "color":"rgba(255,255,255,0.7)" });
         $('#unit2').css({"color":"white"});
        });
           //back to celsius
       $("#c_icon").on("click", function(){
-        $("#temp").html(Math.round(json.main.temp_max)).addClass("animated fadeIn").removeClass("animate fadeIn");
+        $("#temp").html(Math.round(json.main?.temp_max)).addClass("animated fadeIn").removeClass("animate fadeIn");
         $("#unit2").css({"color":"rgba(255,255,255,0.7)"});
         $(this).css({"color":"white"});
       });
@@ -325,7 +319,6 @@ function get_timezone(latitude,longitude) {
   
   $.ajax({
     url: "php/getTimezone.php",
-    dataType: 'json',
     type: "GET",
     data: {
       lat: latitude,
@@ -334,9 +327,9 @@ function get_timezone(latitude,longitude) {
     success: function (json) {
       json = JSON.parse(json);
      
-      $('#sunrise').html(json?.sunrise.slice(11,20));
-      $('#sunset').html(json?.sunset.slice(11,20));
-      $('#timeNow').html(json?.time.slice(11,20));
+      $('#sunrise').html(json?.sunrise?.slice(11,20));
+      $('#sunset').html(json?.sunset?.slice(11,20));
+      $('#timeNow').html(json?.time?.slice(11,20));
       
     },
   });
@@ -371,11 +364,11 @@ function get_covid() {
       name: country_name, 
     },
     success: function (json) {
-      const cntr= json.filter((a)=>a.country===country_name);
+      const cntr= json?.filter((a)=>a.country===country_name);
      console.log("covid here ",cntr);
-     $('#covidCases').html(cntr[0].cases);
-        $('#covidDeaths').html(cntr[0].deaths);
-        $('#covidRecover').html(cntr[0].recovered);
+     $('#covidCases').html(cntr[0]?.cases);
+        $('#covidDeaths').html(cntr[0]?.deaths);
+        $('#covidRecover').html(cntr[0]?.recovered);
       
     },
   });
@@ -398,7 +391,7 @@ function get_earthquakes(east, west, north, south) {
     success: function (json) {
       json = JSON.parse(json);
       
-      const data = json.earthquakes;
+      const data = json?.earthquakes;
       
       const city_icon = L.ExtraMarkers.icon({
         icon: "fa-exclamation",
@@ -432,7 +425,7 @@ function get_exchange_rate(base) {
       json = JSON.parse(json);
       
      
-      $('#exchangeCurrency').html(json.rates[base]);
+      $('#exchangeCurrency').html(json?.rates[base]);
     },
   });
 }
@@ -458,7 +451,8 @@ $('#country_list').change(function() {
   country_code_global = country_code;
   get_country_border(country_code);
   get_country_info(country_code);
-  if(changes>1){
+  console.log(changes);
+  if(changes > 0){
     wikibtn.remove();
     countrybtn.remove();
     currencybtn.remove();
@@ -488,6 +482,7 @@ $("#ocean_info").animate({
 },
 1000
 );
+
 });
 
 
@@ -538,12 +533,15 @@ function get_country_info(country_code) {
       );
       $("#country_flag").attr("src", details[0].flag);
       $("#countryCurrency").html(details[0].currencies[0].name);
+      get_ocean(details[0].latlng[0],details[0].latlng[1]);
+      get_timezone(details[0].latlng[0],details[0].latlng[1]);
       get_weather(details[0].capital);
       get_exchange_rate(details[0].currencies[0].code);
     },
   });
 }
 $('#left_arrow_news').click(function() {
+  changes=1;
   $("#news_info").animate({
     left: "-999px",
   },
@@ -700,6 +698,7 @@ timebtn.remove();
 
 })
 $('#left_arrow').click(function() {
+  changes=1;
   $("#country_info").animate({
     left: "-999px",
   },
@@ -856,6 +855,8 @@ timebtn.remove();
 
 });
 $('#left_arrow_weather').click(function() {
+  changes=1;
+
   $("#weather_info").animate({
     left: "-999px",
   },
@@ -1012,6 +1013,8 @@ timebtn.remove();
 }).addTo(map);
 });
 $('#left_arrow_ocean').click(function() {
+  changes=1;
+  
   $("#ocean_info").animate({
     left: "-999px",
   },
@@ -1167,6 +1170,8 @@ timebtn.remove();
 
 });
 $('#left_arrow_time').click(function() {
+  changes=1;
+
   $("#time_info").animate({
     left: "-999px",
   },
@@ -1322,6 +1327,8 @@ timebtn.remove();
 
 });
 $('#left_arrow_covid').click(function() {
+  changes=1;
+
   $("#covid_info").animate({
     left: "-999px",
   },
@@ -1476,6 +1483,8 @@ timebtn.remove();
 });
 
 $('#left_arrow_currency').click(function() {
+  changes=1;
+
   $("#currency_info").animate({
     left: "-999px",
   },
@@ -1634,6 +1643,8 @@ timebtn.remove();
 
 
 $('#left_arrow_wiki').click(function() {
+  changes=1;
+
   
   $("#wiki_info").animate({
     left: "-999px",
@@ -1806,7 +1817,7 @@ function get_nearby_wikipedia(east, west, north, south) {
     success: function (json) {
       json = JSON.parse(json);
      
-      const data = json.geonames;
+      const data = json?.geonames;
       const wiki_icon = L.ExtraMarkers.icon({
         icon: "fa-wikipedia-w",
         markerColor: "blue",
