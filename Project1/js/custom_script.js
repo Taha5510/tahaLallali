@@ -96,6 +96,7 @@ function get_user_location() {
         $.ajax({
           url: "php/getCountryCodeFromLatLng.php",
           type: "GET",
+          dataType: 'json',
           data:{
             lat:latitude,
             lng: longitude,
@@ -103,7 +104,7 @@ function get_user_location() {
           success: function (json) {
             map.spin(false);
             json = JSON.parse(json); // Parse the string data to JavaScript object
-            const country_code = json.countryCode;
+            const country_code = json?.countryCode;
             $("#country_list").val(country_code).trigger("change");
             
           },
@@ -149,6 +150,7 @@ function get_country_border(country_code) {
       get_ocean(cntrLat,cntrLng);
       get_timezone(cntrLat,cntrLng);
       get_news();
+      get_covid();
       const settings = {
         "async": true,
         "crossDomain": true,
@@ -285,7 +287,7 @@ function get_ocean(latitude,longitude) {
     success: function (json) {
       json = JSON.parse(json);
       
-      $('#Ocean').html(json.ocean.name);
+      $('#Ocean').html(json.ocean?.name);
     },
   });
 }
@@ -323,6 +325,7 @@ function get_timezone(latitude,longitude) {
   
   $.ajax({
     url: "php/getTimezone.php",
+    dataType: 'json',
     type: "GET",
     data: {
       lat: latitude,
@@ -331,9 +334,9 @@ function get_timezone(latitude,longitude) {
     success: function (json) {
       json = JSON.parse(json);
      
-      $('#sunrise').html(json.sunrise.slice(11,20));
-      $('#sunset').html(json.sunset.slice(11,20));
-      $('#timeNow').html(json.time.slice(11,20));
+      $('#sunrise').html(json?.sunrise.slice(11,20));
+      $('#sunset').html(json?.sunset.slice(11,20));
+      $('#timeNow').html(json?.time.slice(11,20));
       
     },
   });
@@ -341,21 +344,39 @@ function get_timezone(latitude,longitude) {
 function get_news() {
   
   $.ajax({
-    url: "https://newsapi.org/v2/everything?q="+country_name+"&from=2022-12-16&sortBy=popularity&apiKey=645cf8c127fc455b923481b100641618",
+    url: "https://api.goperigon.com/v1/all?apiKey=27eddec6-811f-4565-b3fd-bbb07f9bb938&from=2022-12-29&sourceGroup=top100&showNumResults=true&showReprints=false&excludeLabel=Non-news&excludeLabel=Opinion&excludeLabel=Paid News&excludeLabel=Roundup&excludeLabel=Press Release&sortBy=date&q="+country_name+"",
     type: "GET",
     data: {
       name: country_name, 
     },
     success: function (json) {
       
-     
-      $('#newsTitle').html(json.articles[0].title);
-      $('#newsTitle2').html(json.articles[1].title);
-      $('#newsTitle3').html(json.articles[2].title);
-      $('#newsDesc3').html(json.articles[2].description);
-      $('#newsDesc2').html(json.articles[1].description);
-      $('#newsDesc').html(json.articles[0].description);
+     console.log("news are here ",json);
+      $('#newsTitle').html(json.articles[0]?.title);
+      $('#newsTitle2').html(json.articles[1]?.title);
+      $('#newsTitle3').html(json.articles[2]?.title);
+      $('#newsDesc3').html(json.articles[2]?.description);
+      $('#newsDesc2').html(json.articles[1]?.description);
+      $('#newsDesc').html(json.articles[0]?.description);
 
+    },
+  });
+}
+function get_covid() {
+  
+  $.ajax({
+    url: "https://disease.sh/v3/covid-19/countries",
+    type: "GET",
+    data: {
+      name: country_name, 
+    },
+    success: function (json) {
+      const cntr= json.filter((a)=>a.country===country_name);
+     console.log("covid here ",cntr);
+     $('#covidCases').html(cntr[0].cases);
+        $('#covidDeaths').html(cntr[0].deaths);
+        $('#covidRecover').html(cntr[0].recovered);
+      
     },
   });
 }
@@ -488,7 +509,7 @@ function get_country_info(country_code) {
     top: 180,
     left: 150,
   });
-
+  $("#left_arrow").prop("disabled",true);
   $.ajax({
     url: "php/getCountryInfo.php",
     type: "GET",
@@ -497,6 +518,8 @@ function get_country_info(country_code) {
     },
     success: function (response) {
       map.spin(false);
+  $("#left_arrow").prop("disabled",false);
+
       let details = $.parseJSON(response);
     
       lat = details[0].latlng[0];
@@ -594,7 +617,7 @@ newsbtn.remove();
 weatherebtn.remove();
 
 countrybtn.remove();
-
+wikibtn.remove();
 covidbtn.remove();
 currencybtn.remove();
 oceanbtn.remove();
@@ -750,7 +773,7 @@ newsbtn.remove();
 weatherebtn.remove();
 
 countrybtn.remove();
-
+wikibtn.remove();
 covidbtn.remove();
 currencybtn.remove();
 oceanbtn.remove();
@@ -904,6 +927,7 @@ covidbtn = L.easyButton('fa-exclamation', function(){
 this.remove();
 newsbtn.remove();
 weatherebtn.remove();
+wikibtn.remove();
 
 countrybtn.remove();
 
