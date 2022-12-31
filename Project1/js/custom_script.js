@@ -248,12 +248,12 @@ function get_nearby_weather(east, west, north, south) {
 }
 
 function get_wikipedia() {
-  
+  const cntrname = country_name.replace(/ +/g, "");
   $.ajax({
     url: "php/getWikipedia.php",
     type: "GET",
     data: {
-      country:country_name,
+      country:cntrname,
       
     },
     success: function (xml) {
